@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Booking Tiket Pesawat{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="{{ url_for('index') }}">✈️ Booking Tiket</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Cari Penerbangan</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('my_bookings') }}" {% if request.endpoint == 'my_bookings' %}class="active"{% endif %}>Pemesanan Saya</a></li>
+                    <li><a href="{{ url_for('manage_flights') }}" {% if request.endpoint == 'manage_flights' %}class="active"{% endif %}>Kelola Penerbangan</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <div class="auth-nav">
+                {% if current_user.is_authenticated %}
+                    <span class="username">Halo, {{ current_user.username }}!</span>
+                    <form action="{{ url_for('logout') }}" method="post" style="display:inline;">
+                        <button type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Flashed Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Konten Utama Halaman -->
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        &copy; {{ current_year }} Booking Tiket Pesawat. All rights reserved.
+    </footer>
+
+    <!-- Custom Modal for Confirmations -->
+    <div id="customConfirmModal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <p id="customConfirmMessage"></p>
+            <div class="button-group">
+                <button id="customConfirmYes" type="button">Ya</button>
+                <button id="customConfirmNo" type="button" class="secondary">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global function to show custom confirmation modal
+        function showCustomConfirm(message, callback) {
+            const modal = document.getElementById('customConfirmModal');
+            const msgElement = document.getElementById('customConfirmMessage');
+            const yesBtn = document.getElementById('customConfirmYes');
+            const noBtn = document.getElementById('customConfirmNo');
+
+            msgElement.textContent = message;
+            modal.classList.add('active');
+
+            const removeModal = () => {
+                modal.classList.remove('active');
+                yesBtn.onclick = null; // Clear event listeners
+                noBtn.onclick = null;
+            };
+
+            yesBtn.onclick = () => {
+                removeModal();
+                callback(true);
+            };
+
+            noBtn.onclick = () => {
+                removeModal();
+                callback(false);
+            };
+
+            // Allow closing by clicking outside the modal content
+            modal.onclick = (event) => {
+                if (event.target === modal) {
+                    removeModal();
+                    callback(false);
+                }
+            };
+        }
+
+        // Auto-hide flash messages after a few seconds
+        document.addEventListener('DOMContentLoaded', () => {
+            const flashMessages = document.querySelectorAll('.flash-messages .alert');
+            flashMessages.forEach(msg => {
+                setTimeout(() => {
+                    msg.style.opacity = '0';
+                    msg.style.transition = 'opacity 0.5s ease-out';
+                    setTimeout(() => msg.remove(), 500); // Remove after transition
+                }, 5000); // Hide after 5 seconds
+            });
+        });
+    </script>
+</body>
+</html>

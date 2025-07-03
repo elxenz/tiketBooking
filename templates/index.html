@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Cari Penerbangan - Booking Tiket Pesawat{% endblock %}
+
+{% block content %}
+    <h2 class="text-center" style="margin-bottom: 30px; color: #2c3e50;">Temukan Penerbangan Impian Anda</h2>
+
+    <div class="card search-form">
+        <form action="{{ url_for('index') }}" method="GET">
+            <div class="flex-group">
+                <div>
+                    <label for="origin">Dari (Bandara Asal):</label>
+                    <select id="origin" name="origin">
+                        <option value="">-- Semua Bandara --</option>
+                        {% for airport in airports %}
+                        <option value="{{ airport }}" {% if origin_filter == airport %}selected{% endif %}>{{ airport }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="destination">Ke (Bandara Tujuan):</label>
+                    <select id="destination" name="destination">
+                        <option value="">-- Semua Bandara --</option>
+                        {% for airport in airports %}
+                        <option value="{{ airport }}" {% if destination_filter == airport %}selected{% endif %}>{{ airport }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="departure_date">Tanggal Keberangkatan:</label>
+                    <input type="date" id="departure_date" name="departure_date" value="{{ departure_date_filter }}">
+                </div>
+                <button type="submit" style="min-width: 150px;">Cari Penerbangan</button>
+            </div>
+        </form>
+    </div>
+
+    <h3 style="margin-top: 40px; margin-bottom: 20px; color: #2c3e50;">
+        {% if search_performed %}
+            Hasil Pencarian:
+        {% else %}
+            Penerbangan Tersedia:
+        {% endif %}
+    </h3>
+
+    <div class="card">
+        {% if flights %}
+            <div>
+                {% for flight in flights %}
+                    <div class="flight-item">
+                        <div class="flight-info">
+                            <h3>{{ flight.origin }} ➡️ {{ flight.destination }} ({{ flight.flight_number }})</h3>
+                            <p>Keberangkatan: {{ flight.departure_time.strftime('%d %b %Y, %H:%M') }}</p>
+                            <p>Kedatangan: {{ flight.arrival_time.strftime('%d %b %Y, %H:%M') }}</p>
+                            <p>Kursi Tersedia: {{ flight.available_seats }}</p>
+                        </div>
+                        <div class="flight-actions">
+                            <span class="price">Rp {{ "{:,.0f}".format(flight.price) }}</span>
+                            <a href="{{ url_for('flight_details', flight_id=flight._id) }}" class="button" style="text-decoration:none; background:#2ecc71; color:#fff; padding:10px 20px; border-radius:5px;">Detail & Pesan</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center" style="padding: 20px;">Tidak ada penerbangan yang ditemukan sesuai kriteria pencarian Anda.</p>
+        {% endif %}
+    </div>
+{% endblock %}

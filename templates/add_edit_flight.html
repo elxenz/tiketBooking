@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if flight_data and flight_data._id %}Edit Penerbangan{% else %}Tambah Penerbangan{% endif %} - Booking Tiket Pesawat
+{% endblock %}
+
+{% block content %}
+    <h2 class="text-center" style="margin-bottom: 30px; color: #2c3e50;">
+        {% if flight_data and flight_data._id %}Edit Penerbangan{% else %}Tambah Penerbangan Baru{% endif %}
+    </h2>
+
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+        <form action="{% if flight_data and flight_data._id %}{{ url_for('edit_flight', flight_id=flight_data._id) }}{% else %}{{ url_for('add_flight') }}{% endif %}" method="POST">
+            <label for="flight_number">Nomor Penerbangan:</label>
+            <input type="text" id="flight_number" name="flight_number" value="{{ flight_data.flight_number if flight_data }}" required {% if flight_data and flight_data._id %}readonly{% endif %} >
+            {% if flight_data and flight_data._id %}<small style="color: #777;">Nomor penerbangan tidak bisa diubah setelah dibuat.</small>{% endif %}
+
+
+            <label for="origin">Bandara Asal:</label>
+            <input type="text" id="origin" name="origin" list="airports_list_origin" value="{{ flight_data.origin if flight_data }}" placeholder="Contoh: CGK" required>
+            <datalist id="airports_list_origin">
+                {% for airport in airports %}
+                <option value="{{ airport }}">
+                {% endfor %}
+            </datalist>
+
+            <label for="destination">Bandara Tujuan:</label>
+            <input type="text" id="destination" name="destination" list="airports_list_destination" value="{{ flight_data.destination if flight_data }}" placeholder="Contoh: DPS" required>
+            <datalist id="airports_list_destination">
+                {% for airport in airports %}
+                <option value="{{ airport }}">
+                {% endfor %}
+            </datalist>
+
+            <label for="departure_time">Waktu Keberangkatan:</label>
+            <input type="datetime-local" id="departure_time" name="departure_time" value="{{ flight_data.departure_time_str if flight_data and flight_data.departure_time_str else '' }}" required>
+
+            <label for="arrival_time">Waktu Kedatangan:</label>
+            <input type="datetime-local" id="arrival_time" name="arrival_time" value="{{ flight_data.arrival_time_str if flight_data and flight_data.arrival_time_str else '' }}" required>
+
+            <label for="price">Harga (Rp):</label>
+            <input type="number" id="price" name="price" step="0.01" value="{{ flight_data.price if flight_data }}" min="0" required>
+
+            <label for="total_seats">Total Kursi:</label>
+            <input type="number" id="total_seats" name="total_seats" value="{{ flight_data.total_seats if flight_data }}" min="1" required>
+
+            <button type="submit">
+                {% if flight_data and flight_data._id %}Update Penerbangan{% else %}Tambah Penerbangan{% endif %}
+            </button>
+        </form>
+
+        <a href="{{ url_for('manage_flights') }}" style="display:inline-block; margin-top:20px; color:#4a90e2; text-decoration:none;">
+            ← Kembali ke Manajemen Penerbangan
+        </a>
+    </div>
+{% endblock %}

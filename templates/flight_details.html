@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Detail Penerbangan - Booking Tiket Pesawat{% endblock %}
+
+{% block content %}
+    <h2 class="text-center" style="margin-bottom: 30px; color: #2c3e50;">Detail Penerbangan: {{ flight.flight_number }}</h2>
+
+    <div class="card">
+        <div class="detail-grid">
+            <div class="detail-item">
+                <strong>Nomor Penerbangan:</strong> {{ flight.flight_number }}
+            </div>
+            <div class="detail-item">
+                <strong>Asal:</strong> {{ flight.origin }}
+            </div>
+            <div class="detail-item">
+                <strong>Tujuan:</strong> {{ flight.destination }}
+            </div>
+            <div class="detail-item">
+                <strong>Waktu Keberangkatan:</strong> {{ flight.departure_time.strftime('%d %b %Y, %H:%M') }}
+            </div>
+            <div class="detail-item">
+                <strong>Waktu Kedatangan:</strong> {{ flight.arrival_time.strftime('%d %b %Y, %H:%M') }}
+            </div>
+            <div class="detail-item">
+                <strong>Harga:</strong> Rp {{ "{:,.0f}".format(flight.price) }}
+            </div>
+            <div class="detail-item">
+                <strong>Total Kursi:</strong> {{ flight.total_seats }}
+            </div>
+            <div class="detail-item">
+                <strong>Kursi Tersedia:</strong> {{ flight.available_seats }}
+            </div>
+        </div>
+
+        {% if current_user.is_authenticated %}
+            {% if flight.available_seats > 0 %}
+            <div class="passenger-form-section">
+                <h3 style="margin-bottom: 20px; color: #4a90e2;">Pesan Tiket Ini</h3>
+                <form id="bookingForm" action="{{ url_for('book_flight', flight_id=flight._id) }}" method="POST">
+                    <label for="num_passengers">Jumlah Penumpang:</label>
+                    <input type="number" id="num_passengers" name="num_passengers" min="1" max="{{ flight.available_seats }}" value="1" onchange="generatePassengerFields()" required>
+
+                    <div id="passengerFieldsContainer">
+                        <!-- Passenger fields will be generated here by JavaScript -->
+                    </div>
+
+                    <button type="submit">Konfirmasi Pemesanan</button>
+                </form>
+            </div>
+            {% else %}
+                <p class="text-center" style="color: #e74c3c; font-weight: bold; margin-top: 20px;">Maaf, penerbangan ini sudah penuh.</p>
+            {% endif %}
+        {% else %}
+            <p class="text-center" style="margin-top: 20px;">
+                Anda harus <a href="{{ url_for('login', next=request.path) }}" style="color: #4a90e2; text-decoration: none;">Login</a> untuk memesan tiket.
+            </p>
+        {% endif %}
+    </div>
+
+    <a href="{{ url_for('index') }}" style="display:inline-block; margin-top:20px; color:#4a90e2; text-decoration:none;">
+        ← Kembali ke Pencarian
+    </a>
+
+    <script>
+        // Fungsi untuk menghasilkan input field penumpang berdasarkan jumlah
+        function generatePassengerFields() {
+            const numPassengers = parseInt(document.getElementById('num_passengers').value);
+            const container = document.getElementById('passengerFieldsContainer');
+            container.innerHTML = ''; // Clear existing fields
+
+            for (let i = 1; i <= numPassengers; i++) {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <h4 style="margin-top: 20px; margin-bottom: 10px; color: #666;">Penumpang ${i}</h4>
+                    <label for="passenger_name_${i}">Nama Lengkap:</label>
+                    <input type="text" id="passenger_name_${i}" name="passenger_name_${i}" required>
+
+                    <label for="passenger_dob_${i}">Tanggal Lahir:</label>
+                    <input type="date" id="passenger_dob_${i}" name="passenger_dob_${i}" required>
+
+                    <label for="passenger_id_${i}">Nomor ID (KTP/Paspor):</label>
+                    <input type="text" id="passenger_id_${i}" name="passenger_id_${i}" required>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        // Panggil saat halaman dimuat untuk menghasilkan field awal
+        document.addEventListener('DOMContentLoaded', generatePassengerFields);
+    </script>
+{% endblock %}

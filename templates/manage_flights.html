@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Kelola Penerbangan - Booking Tiket Pesawat{% endblock %}
+
+{% block content %}
+    <h2 class="text-center" style="margin-bottom: 30px; color: #2c3e50;">Manajemen Penerbangan</h2>
+
+    <div class="card">
+        <a href="{{ url_for('add_flight') }}" style="margin-bottom: 20px; display: inline-block; text-decoration:none; padding:10px 15px; background:#2ecc71; color:#fff; border-radius:5px;">+ Tambah Penerbangan Baru</a>
+
+        {% if flights %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>No. Penerbangan</th>
+                        <th>Asal</th>
+                        <th>Tujuan</th>
+                        <th>Waktu Keberangkatan</th>
+                        <th>Waktu Kedatangan</th>
+                        <th>Harga</th>
+                        <th>Total Kursi</th>
+                        <th>Kursi Tersedia</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for flight in flights %}
+                    <tr>
+                        <td>{{ flight.flight_number }}</td>
+                        <td>{{ flight.origin }}</td>
+                        <td>{{ flight.destination }}</td>
+                        <td>{{ flight.departure_time.strftime('%d %b %Y, %H:%M') }}</td>
+                        <td>{{ flight.arrival_time.strftime('%d %b %Y, %H:%M') }}</td>
+                        <td>Rp {{ "{:,.0f}".format(flight.price) }}</td>
+                        <td>{{ flight.total_seats }}</td>
+                        <td>{{ flight.available_seats }}</td>
+                        <td class="actions">
+                            <a href="{{ url_for('edit_flight', flight_id=flight._id) }}">✏️ Edit</a>
+                            <button type="button" class="delete" onclick="confirmDeleteFlight('{{ flight._id }}')">🗑️ Hapus</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-center" style="padding: 20px;">Belum ada penerbangan yang ditambahkan.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function confirmDeleteFlight(flightId) {
+            showCustomConfirm('Yakin ingin menghapus penerbangan ini?', (confirmed) => {
+                if (confirmed) {
+                    fetch(`/delete_flight/${flightId}`, { method: 'POST' })
+                        .then(response => {
+                            if (response.ok) {
+                                window.location.reload();
+                            } else {
+                                console.error('Gagal menghapus penerbangan.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            });
+        }
+    </script>
+{% endblock %}
