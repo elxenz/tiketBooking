@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Tiketku{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Icon untuk menu mobile -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
     <header>
@@ -13,7 +15,12 @@
                 <div class="site-title">
                     <h1><a href="{{ url_for('index') }}">✈️ Tiketku</a></h1>
                 </div>
-                <nav>
+                <!-- Tombol Hamburger untuk Mobile -->
+                <button class="mobile-nav-toggle" aria-controls="primary-navigation" aria-expanded="false">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                    <span class="sr-only">Menu</span>
+                </button>
+                <nav id="primary-navigation" class="primary-navigation">
                     <ul>
                         {% if not current_user.is_authenticated or not current_user.is_admin() %}
                             <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Cari Penerbangan</a></li>
@@ -25,8 +32,20 @@
                             <li><a href="{{ url_for('admin_dashboard') }}">Admin Panel</a></li>
                         {% endif %}
                     </ul>
+                    <!-- Tombol Auth dipindahkan ke dalam nav untuk mobile -->
+                    <div class="auth-buttons-mobile">
+                        {% if current_user.is_authenticated %}
+                            <span class="username">Halo, {{ current_user.username }}!</span>
+                            <form action="{{ url_for('logout') }}" method="post">
+                                <button type="submit" class="button">Logout</button>
+                            </form>
+                        {% else %}
+                            <a href="{{ url_for('login') }}" class="button">Login</a>
+                            <a href="{{ url_for('register') }}" class="button button-primary">Register</a>
+                        {% endif %}
+                    </div>
                 </nav>
-                <div class="auth-buttons">
+                <div class="auth-buttons-desktop">
                     {% if current_user.is_authenticated %}
                         <span class="username">Halo, {{ current_user.username }}!</span>
                         <form action="{{ url_for('logout') }}" method="post" style="display:inline; margin-left: 10px;">
@@ -57,5 +76,25 @@
     <footer>
         <p>&copy; {{ current_year }} Tiketku. All Rights Reserved.</p>
     </footer>
+
+    <script>
+        // JavaScript untuk toggle menu mobile
+        const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+        const primaryNav = document.querySelector('.primary-navigation');
+
+        mobileNavToggle.addEventListener('click', () => {
+            const isVisible = primaryNav.getAttribute('data-visible');
+
+            if (isVisible === 'true') {
+                primaryNav.setAttribute('data-visible', 'false');
+                mobileNavToggle.setAttribute('aria-expanded', 'false');
+                mobileNavToggle.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i><span class="sr-only">Menu</span>';
+            } else {
+                primaryNav.setAttribute('data-visible', 'true');
+                mobileNavToggle.setAttribute('aria-expanded', 'true');
+                mobileNavToggle.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i><span class="sr-only">Close</span>';
+            }
+        });
+    </script>
 </body>
 </html>

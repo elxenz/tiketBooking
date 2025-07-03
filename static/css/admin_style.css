@@ -8,7 +8,8 @@
     --admin-text-light: #F8F9FA;
     --admin-text-dark: #343A40;
     --border-color: #DEE2E6;
-    --radius: 5px;
+    --radius: 8px;
+    --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,31 +23,44 @@ body {
 
 /* --- Sidebar Admin --- */
 .sidebar {
-    width: 240px;
+    width: 250px;
     background: var(--admin-sidebar-bg);
     color: var(--admin-text-light);
     height: 100vh;
     position: fixed;
+    top: 0;
+    left: 0;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
 }
 .sidebar-header h2 a {
     color: #fff;
     text-decoration: none;
     font-size: 1.5rem;
 }
-.sidebar-nav { list-style: none; margin-top: 30px; }
+.sidebar-nav {
+    list-style: none;
+    margin-top: 30px;
+    flex-grow: 1;
+}
 .sidebar-nav li a {
     display: block;
     color: var(--admin-text-light);
     text-decoration: none;
     padding: 12px 15px;
     border-radius: var(--radius);
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    transition: background-color 0.2s;
 }
 .sidebar-nav li a:hover { background: #495057; }
 .sidebar-nav li a.active { background: var(--admin-primary); }
-.sidebar-footer { position: absolute; bottom: 20px; width: calc(100% - 40px); }
-.sidebar-footer p { font-size: 0.9rem; }
+.sidebar-footer {
+    width: calc(100% - 40px);
+    font-size: 0.9rem;
+}
 .logout-btn {
     width: 100%;
     padding: 10px;
@@ -56,32 +70,224 @@ body {
     color: #fff;
     border-radius: var(--radius);
     cursor: pointer;
+    transition: background-color 0.2s;
+}
+.logout-btn:hover {
+    background-color: #c82333;
 }
 
 /* --- Konten Utama Admin --- */
 .main-content {
-    margin-left: 240px;
-    width: calc(100% - 240px);
+    margin-left: 250px;
+    width: calc(100% - 250px);
     padding: 30px;
+    transition: margin-left 0.3s ease-in-out;
 }
-.page-header { margin-bottom: 20px; }
+.page-header {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.page-header h1 {
+    font-size: 1.8rem;
+}
+.add-new-btn {
+    background-color: var(--admin-primary);
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: var(--radius);
+    font-weight: 500;
+}
+
 .card {
     background: #fff;
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: var(--card-shadow);
 }
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-.stat-card { text-align: center; }
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+}
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.stat-card-icon {
+    font-size: 2.5rem;
+}
+.stat-card-info h3 {
+    margin-bottom: 5px;
+    color: #6c757d;
+}
+.stat-card-info p {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
 
 /* --- Tabel Admin --- */
 .table-container { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; }
-table th, table td { padding: 12px; border: 1px solid var(--border-color); text-align: left; }
-table thead { background-color: #e9ecef; }
-.button-sm { padding: 5px 10px; font-size: 0.8rem; border-radius: 3px; border: none; color: #fff; cursor: pointer; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+table th, table td {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+    vertical-align: middle;
+}
+table thead {
+    background-color: #e9ecef;
+}
+table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+.actions-cell {
+    display: flex;
+    gap: 10px;
+}
+.button-sm {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+.button-edit { background-color: #ffc107; color: #212529; }
 .button-delete { background-color: #dc3545; }
-.role-badge { padding: 4px 10px; border-radius: 15px; color: #fff; font-size: 0.8rem; }
+.role-badge, .status-badge {
+    padding: 4px 12px;
+    border-radius: 15px;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
 .role-admin { background-color: #ffc107; color: #212529; }
 .role-user { background-color: #17a2b8; }
+.status-confirmed { background-color: #28a745; }
+.status-cancelled { background-color: #6c757d; }
+
+/* --- Formulir Admin --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.form-full-width {
+    grid-column: 1 / -1;
+}
+.form-grid label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+.form-grid input, .form-grid small {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+}
+.form-grid small {
+    display: block;
+    border: none;
+    padding: 5px 0 0 0;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+.form-actions {
+    margin-top: 25px;
+    text-align: right;
+}
+.form-actions .button-primary {
+    padding: 12px 25px;
+    border: none;
+    background-color: var(--admin-primary);
+    color: #fff;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* --- Tombol Toggle Mobile --- */
+.mobile-sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* --- Flash Messages --- */
+.flash-messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.alert {
+    padding: 15px;
+    border-radius: var(--radius);
+    color: #fff;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+.alert-success { background: #28a745; }
+.alert-error { background: #dc3545; }
+.alert-info { background: #17a2b8; }
+
+
+/* --- Media Queries untuk Responsivitas Admin --- */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar[data-visible="true"] {
+        transform: translateX(0);
+        box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+    }
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    .mobile-sidebar-toggle {
+        display: block;
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-content {
+        padding: 15px;
+    }
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .actions-cell {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

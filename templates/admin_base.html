@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Admin Panel{% endblock %} - Tiketku</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_style.css') }}">
+    <!-- Icon untuk menu mobile -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-    <aside class="sidebar">
+    <button class="mobile-sidebar-toggle" aria-controls="admin-sidebar" aria-expanded="false">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        <span class="sr-only">Menu</span>
+    </button>
+
+    <aside class="sidebar" id="admin-sidebar">
         <div class="sidebar-header">
             <h2><a href="{{ url_for('admin_dashboard') }}">Admin Panel</a></h2>
         </div>
@@ -16,6 +23,7 @@
             <li><a href="{{ url_for('manage_users') }}" {% if request.endpoint == 'manage_users' %}class="active"{% endif %}>Kelola Pengguna</a></li>
             <li><a href="{{ url_for('manage_flights') }}" {% if 'flight' in request.endpoint %}class="active"{% endif %}>Kelola Penerbangan</a></li>
             <li><a href="{{ url_for('manage_all_bookings') }}" {% if request.endpoint == 'manage_all_bookings' %}class="active"{% endif %}>Kelola Pemesanan</a></li>
+             <li><a href="{{ url_for('index') }}">Lihat Situs</a></li>
         </ul>
         <div class="sidebar-footer">
             <p>Login sebagai: <strong>{{ current_user.username }}</strong></p>
@@ -37,5 +45,24 @@
         {% endwith %}
         {% block content %}{% endblock %}
     </main>
+
+    <script>
+        const mobileSidebarToggle = document.querySelector('.mobile-sidebar-toggle');
+        const sidebar = document.querySelector('.sidebar');
+
+        mobileSidebarToggle.addEventListener('click', () => {
+            const isVisible = sidebar.getAttribute('data-visible');
+            if (isVisible === 'true') {
+                sidebar.setAttribute('data-visible', 'false');
+                mobileSidebarToggle.setAttribute('aria-expanded', 'false');
+                mobileSidebarToggle.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i><span class="sr-only">Menu</span>';
+
+            } else {
+                sidebar.setAttribute('data-visible', 'true');
+                mobileSidebarToggle.setAttribute('aria-expanded', 'true');
+                 mobileSidebarToggle.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i><span class="sr-only">Close</span>';
+            }
+        });
+    </script>
 </body>
 </html>

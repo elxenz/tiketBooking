@@ -33,7 +33,7 @@ body {
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0 20px; /* Padding diubah untuk mobile */
 }
 
 /* --- Header & Navigasi --- */
@@ -56,12 +56,20 @@ header {
     color: var(--text-dark);
     text-decoration: none;
 }
-nav ul {
+
+.primary-navigation {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.primary-navigation ul {
     list-style: none;
     display: flex;
     gap: 20px;
+    margin: 0;
 }
-nav ul li a {
+.primary-navigation ul li a {
     color: var(--text-dark);
     text-decoration: none;
     font-weight: 500;
@@ -69,19 +77,24 @@ nav ul li a {
     border-radius: 8px;
     transition: all 0.2s ease;
 }
-nav ul li a.active, nav ul li a:hover {
+.primary-navigation ul li a.active, .primary-navigation ul li a:hover {
     color: var(--primary-color);
     background-color: #e7f1ff;
 }
-.auth-buttons {
+
+.auth-buttons-desktop {
     display: flex;
     align-items: center;
     gap: 15px;
 }
-.auth-buttons .username {
+.auth-buttons-mobile {
+    display: none; /* Sembunyikan di desktop */
+}
+
+.username {
     font-weight: 600;
 }
-.button, .auth-buttons a, .auth-buttons button {
+.button, .auth-buttons-desktop a, .auth-buttons-desktop button, .auth-buttons-mobile a, .auth-buttons-mobile button {
     padding: 8px 15px;
     border-radius: var(--border-radius);
     border: 1px solid var(--primary-color);
@@ -91,21 +104,45 @@ nav ul li a.active, nav ul li a:hover {
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: inline-block;
+    text-align: center;
 }
-.button-primary, .auth-buttons a[href*="register"] {
+.button-primary, .auth-buttons-desktop a[href*="register"], .auth-buttons-mobile a[href*="register"] {
     background: var(--primary-color);
     color: var(--bg-white);
 }
-.button:hover, .auth-buttons a:hover, .auth-buttons button:hover {
+.button:hover, .auth-buttons-desktop a:hover, .auth-buttons-desktop button:hover, .auth-buttons-mobile a:hover, .auth-buttons-mobile button:hover {
     opacity: 0.8;
     transform: translateY(-1px);
 }
+
+/* --- Mobile Navigation --- */
+.mobile-nav-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1001;
+}
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 
 /* --- Notifikasi (Flash Message) --- */
 .flash-messages {
     list-style: none;
     padding: 0;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 .alert {
     padding: 15px;
@@ -131,14 +168,14 @@ main {
 }
 .page-title {
     text-align: center;
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 600;
     margin-bottom: 30px;
     color: var(--text-dark);
 }
 .card {
     background: var(--bg-white);
-    padding: 30px;
+    padding: 20px;
     margin-bottom: 30px;
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
@@ -163,6 +200,7 @@ main {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     transition: border-color 0.2s ease;
+    font-size: 1rem;
 }
 .form-group input:focus, .form-group select:focus {
     outline: none;
@@ -194,12 +232,12 @@ main {
     border-bottom: none;
 }
 .flight-item:hover {
-    transform: translateX(10px);
+    transform: translateX(5px);
     background-color: #f8f9fa;
     border-radius: var(--border-radius);
 }
 .flight-info h3 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 5px;
 }
@@ -212,7 +250,7 @@ main {
     text-align: right;
 }
 .flight-actions .price {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: var(--primary-color);
     margin-bottom: 10px;
@@ -229,6 +267,34 @@ main {
     background-color: #0056b3;
 }
 
+/* --- Tabel Responsif --- */
+.table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap; /* Mencegah teks terpotong */
+}
+table th, table td {
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+table thead {
+    background-color: #e9ecef;
+}
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 15px;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+.status-confirmed { background-color: #28a745; }
+.status-cancelled { background-color: #dc3545; }
+
 /* --- Footer --- */
 footer {
     text-align: center;
@@ -236,4 +302,73 @@ footer {
     padding: 20px;
     border-top: 1px solid var(--border-color);
     margin-top: auto;
+}
+
+/* --- Media Queries untuk Responsivitas --- */
+@media (max-width: 768px) {
+    .primary-navigation {
+        position: fixed;
+        inset: 0 0 0 30%; /* Muncul dari kanan */
+        flex-direction: column;
+        padding: min(20vh, 10rem) 2rem;
+        background: var(--bg-white);
+        transform: translateX(100%);
+        transition: transform 350ms ease-out;
+        gap: 30px;
+    }
+    .primary-navigation[data-visible="true"] {
+        transform: translateX(0%);
+    }
+    .primary-navigation ul {
+        flex-direction: column;
+        text-align: center;
+        width: 100%;
+    }
+
+    .mobile-nav-toggle {
+        display: block;
+    }
+    .auth-buttons-desktop {
+        display: none;
+    }
+    .auth-buttons-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        border-top: 1px solid var(--border-color);
+        padding-top: 20px;
+        margin-top: 20px;
+        align-items: center;
+    }
+    .auth-buttons-mobile .button {
+        width: 100%;
+    }
+
+    .page-title {
+        font-size: 1.8rem;
+    }
+
+    .flight-item {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        text-align: center;
+    }
+    .flight-actions {
+        text-align: center;
+    }
+    .flight-info h3 {
+        font-size: 1.1rem;
+    }
+    .flight-actions .price {
+        font-size: 1.2rem;
+    }
+
+    .card {
+        padding: 15px;
+    }
+    
+    .login-card, .register-card {
+        margin: 20px auto;
+    }
 }
