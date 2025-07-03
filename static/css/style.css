@@ -1,16 +1,16 @@
-/* static/css/style.css - Versi Awal yang Dirapikan */
+/* static/css/style.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 :root {
     --primary-color: #007BFF;
     --secondary-color: #6C757D;
-    --bg-light: #F8F9FA;
+    --bg-light: #F4F7F9;
     --bg-white: #FFFFFF;
     --text-dark: #343A40;
     --text-light: #6C757D;
-    --border-color: #DEE2E6;
-    --border-radius: 8px;
-    --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    --border-color: #E9ECEF;
+    --border-radius: 12px;
+    --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
 }
 
 * {
@@ -41,39 +41,46 @@ header {
     background: var(--bg-white);
     padding: 15px 0;
     border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
-
 .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
 .site-title h1 a {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-dark);
     text-decoration: none;
 }
-
 nav ul {
     list-style: none;
     display: flex;
     gap: 20px;
 }
-
 nav ul li a {
     color: var(--text-dark);
     text-decoration: none;
     font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
-
+nav ul li a.active, nav ul li a:hover {
+    color: var(--primary-color);
+    background-color: #e7f1ff;
+}
 .auth-buttons {
     display: flex;
     align-items: center;
     gap: 15px;
 }
-
+.auth-buttons .username {
+    font-weight: 600;
+}
 .button, .auth-buttons a, .auth-buttons button {
     padding: 8px 15px;
     border-radius: var(--border-radius);
@@ -83,16 +90,38 @@ nav ul li a {
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
-
 .button-primary, .auth-buttons a[href*="register"] {
     background: var(--primary-color);
     color: var(--bg-white);
 }
-
 .button:hover, .auth-buttons a:hover, .auth-buttons button:hover {
     opacity: 0.8;
+    transform: translateY(-1px);
+}
+
+/* --- Notifikasi (Flash Message) --- */
+.flash-messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.alert {
+    padding: 15px;
+    border-radius: var(--border-radius);
+    color: #fff;
+    font-weight: 500;
+    margin-bottom: 15px;
+    animation: fadeIn 0.4s ease-out;
+}
+.alert-success { background: #28a745; }
+.alert-error { background: #dc3545; }
+.alert-info { background: #17a2b8; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* --- Konten & Kartu --- */
@@ -100,52 +129,105 @@ main {
     padding: 30px 0;
     flex-grow: 1;
 }
-
 .page-title {
     text-align: center;
-    font-size: 2rem;
+    font-size: 2.2rem;
+    font-weight: 600;
     margin-bottom: 30px;
+    color: var(--text-dark);
 }
-
 .card {
     background: var(--bg-white);
-    padding: 25px;
-    margin-bottom: 25px;
+    padding: 30px;
+    margin-bottom: 30px;
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
     box-shadow: var(--card-shadow);
 }
 
-/* --- Formulir --- */
-.form-group {
-    margin-bottom: 15px;
-}
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-}
-.form-group input, .form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-}
+/* --- Formulir Pencarian --- */
 .search-form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     align-items: flex-end;
 }
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: border-color 0.2s ease;
+}
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+.search-form-grid .button {
+    width: 100%;
+    padding: 12px;
+}
 
-/* --- Tabel --- */
-.table-container { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; }
-table th, table td { padding: 12px; border: 1px solid var(--border-color); text-align: left; }
-table thead { background-color: #f2f2f2; }
-.status-badge { padding: 4px 10px; border-radius: 15px; color: #fff; font-size: 0.8rem; }
-.status-confirmed { background: #28a745; }
-.status-cancelled { background: #dc3545; }
+/* --- Daftar Penerbangan Dinamis --- */
+.flight-list-header {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 40px 0 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+.flight-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.flight-item:last-child {
+    border-bottom: none;
+}
+.flight-item:hover {
+    transform: translateX(10px);
+    background-color: #f8f9fa;
+    border-radius: var(--border-radius);
+}
+.flight-info h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.flight-info p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+}
+.flight-actions {
+    text-align: right;
+}
+.flight-actions .price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+.flight-actions .button {
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: #fff;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.flight-actions .button:hover {
+    background-color: #0056b3;
+}
 
 /* --- Footer --- */
 footer {
@@ -153,4 +235,5 @@ footer {
     color: var(--text-light);
     padding: 20px;
     border-top: 1px solid var(--border-color);
+    margin-top: auto;
 }
