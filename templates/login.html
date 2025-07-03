@@ -1,19 +1,15 @@
 {% extends "base.html" %}
-
-{% block title %}Login - Booking Tiket Pesawat{% endblock %}
-
+{% block title %}Login ke Akun Anda{% endblock %}
 {% block content %}
-    <div class="card" style="max-width: 500px; margin: 50px auto;">
-        <h2 class="text-center" style="margin-bottom: 30px; color: #4a90e2;">Login</h2>
-        <form action="{{ url_for('login') }}" method="POST">
-            <label for="username">Username:</label>
+    <div class="card auth-card">
+        <h2>Selamat Datang Kembali!</h2>
+        <form method="POST">
+            <label for="username">Username</label>
             <input type="text" id="username" name="username" required>
-
-            <label for="password">Password:</label>
+            <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
-
-            <button type="submit">Login</button>
+            <button type="submit" class="button">Login</button>
         </form>
-        <p class="text-center" style="margin-top: 20px;">Belum punya akun? <a href="{{ url_for('register') }}" style="color: #4a90e2; text-decoration: none;">Daftar di sini</a></p>
+        <p class="auth-switch">Belum punya akun? <a href="{{ url_for('register') }}">Daftar di sini</a></p>
     </div>
 {% endblock %}

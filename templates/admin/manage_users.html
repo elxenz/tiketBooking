@@ -1,0 +1,43 @@
+{% extends "admin_base.html" %}
+{% block title %}Kelola Pengguna{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Kelola Pengguna</h1>
+</div>
+
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Peran</th>
+                    <th>Tanggal Bergabung</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td><span class="role-badge role-{{ user.role }}">{{ user.role|capitalize }}</span></td>
+                    <td>{{ user.created_at.strftime('%d %b %Y') }}</td>
+                    <td class="actions-cell">
+                        {% if user._id|string != current_user.id %}
+                        <form action="{{ url_for('delete_user', user_id=user._id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengguna ini?');">
+                            <button type="submit" class="button-sm button-delete">Hapus</button>
+                        </form>
+                        {% else %}
+                        (Anda)
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

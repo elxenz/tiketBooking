@@ -1,0 +1,24 @@
+{% extends "admin_base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Dashboard</h1>
+    <p>Selamat datang, Admin! Berikut adalah ringkasan aktivitas di platform Anda.</p>
+</div>
+
+<div class="stats-grid">
+    <div class="card stat-card">
+        <h3>Total Pengguna</h3>
+        <p>{{ stats.total_users }}</p>
+    </div>
+    <div class="card stat-card">
+        <h3>Total Penerbangan</h3>
+        <p>{{ stats.total_flights }}</p>
+    </div>
+    <div class="card stat-card">
+        <h3>Pemesanan Aktif</h3>
+        <p>{{ stats.total_bookings }}</p>
+    </div>
+</div>
+{% endblock %}

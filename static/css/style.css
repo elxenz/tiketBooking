@@ -1,0 +1,129 @@
+/* static/css/style.css */
+
+/* --- Import Font & Variabel CSS --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #5D50C6;
+    --secondary-color: #F85E9F;
+    --text-dark: #222222;
+    --text-light: #777777;
+    --bg-light: #F8F9FA;
+    --bg-white: #FFFFFF;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    --border-radius: 12px;
+}
+
+/* --- Reset & Pengaturan Dasar --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    flex-grow: 1;
+}
+
+a { color: var(--primary-color); text-decoration: none; transition: color 0.3s ease; }
+a:hover { color: var(--secondary-color); }
+
+/* --- Header & Navigasi --- */
+header {
+    background: var(--bg-white);
+    padding: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky; top: 0; z-index: 100;
+}
+header .container { display: flex; justify-content: space-between; align-items: center; }
+header h1 a { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); }
+nav ul { list-style: none; display: flex; gap: 25px; align-items: center; }
+nav ul li a { color: var(--text-dark); font-weight: 500; padding: 8px 12px; border-radius: 8px; transition: all 0.3s ease; }
+nav ul li a.active, nav ul li a:hover { color: var(--primary-color); background-color: rgba(93, 80, 198, 0.1); }
+.auth-nav { display: flex; gap: 15px; align-items: center; }
+.auth-nav .username { font-weight: 600; }
+.auth-nav .button, .auth-nav button { padding: 10px 20px; border-radius: var(--border-radius); border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem; }
+.auth-nav .button-outline { background: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); }
+.auth-nav .button-primary { background: var(--primary-color); color: var(--bg-white); }
+.auth-nav .button:hover, .auth-nav button:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(93, 80, 198, 0.2); }
+
+/* --- Tombol Utama & Kartu --- */
+.button {
+    width: 100%; padding: 15px; border-radius: var(--border-radius); border: none; font-weight: 600;
+    cursor: pointer; transition: all 0.3s ease; font-size: 1rem; background: var(--primary-color);
+    color: var(--bg-white); display: inline-block; text-align: center;
+}
+.button:hover { background: var(--secondary-color); box-shadow: 0 4px 20px rgba(248, 94, 159, 0.3); transform: translateY(-2px); }
+
+.card {
+    background: var(--bg-white); padding: 35px; margin-bottom: 30px;
+    border-radius: var(--border-radius); box-shadow: var(--card-shadow);
+    border: 1px solid #eee; animation: fadeIn 0.5s ease-out;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- Formulir --- */
+form label { display: block; margin-bottom: 8px; font-weight: 600; }
+form input, form select {
+    width: 100%; padding: 14px 16px; margin-bottom: 15px; border: 1px solid #ddd;
+    border-radius: 8px; font-size: 1rem; font-family: 'Poppins', sans-serif; transition: all 0.3s ease;
+}
+form input:focus, form select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(93, 80, 198, 0.1); }
+.auth-card { max-width: 450px; margin: 50px auto; text-align: center; }
+.auth-card h2 { margin-bottom: 30px; }
+.auth-switch { margin-top: 25px; }
+
+/* --- Notifikasi --- */
+.flash-messages { margin-bottom: 20px; list-style: none; padding: 0;}
+.alert { padding: 15px 20px; border-radius: 8px; color: #fff; display: block; animation: slideDown 0.4s ease-out; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+.alert-success { background: #2ecc71; }
+.alert-error { background: #e74c3c; }
+.alert-info { background: #3498db; }
+
+/* --- Halaman Utama & Daftar Penerbangan --- */
+.page-title { text-align: center; margin-bottom: 30px; }
+.search-form .flex-group { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+.search-form .flex-group > div { flex: 1; min-width: 200px; }
+.search-form .button { flex-basis: 180px; padding: 14px; }
+.flight-item {
+    display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center;
+    padding: 25px; border-bottom: 1px solid #f0f0f0; transition: all 0.3s;
+}
+.flight-item:last-child { border-bottom: none; }
+.flight-item:hover { transform: scale(1.02); box-shadow: var(--card-shadow); z-index: 10; background: var(--bg-white); border-radius: var(--border-radius); }
+.flight-info h3 { margin-bottom: 8px; font-weight: 600; }
+.flight-info p { font-size: 0.9rem; color: var(--text-light); margin-bottom: 2px; }
+.flight-actions { text-align: right; }
+.flight-actions .price { font-size: 1.6rem; font-weight: 700; color: var(--secondary-color); display: block; margin-bottom: 10px; }
+.flight-actions .button-small { padding: 10px 25px; font-size: 0.9rem; width: auto; }
+
+/* --- Detail & Booking --- */
+.detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+.detail-item { background: var(--bg-light); padding: 20px; border-radius: 8px; }
+.detail-item strong { display: block; margin-bottom: 5px; color: var(--primary-color); font-size: 0.9em; }
+.booking-section { margin-top: 30px; border-top: 1px solid #f0f0f0; padding-top: 20px; }
+
+/* --- Tabel (My Bookings) --- */
+.table-container { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+table th, table td { padding: 15px; border-bottom: 1px solid #eee; text-align: left; vertical-align: middle;}
+table thead th { background: var(--bg-light); font-weight: 600; }
+table tbody tr:hover { background-color: #fafafa; }
+.status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; color: #fff; }
+.status-confirmed { background-color: #27ae60; }
+.status-cancelled { background-color: #c0392b; }
+.action-button { background: none; border: none; cursor: pointer; color: var(--secondary-color); font-weight: 600; }
+
+/* --- Footer --- */
+footer { text-align: center; color: var(--text-light); margin-top: auto; padding: 30px; font-size: 0.9rem; background: var(--bg-white); border-top: 1px solid #eee; }

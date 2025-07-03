@@ -1,77 +1,45 @@
 {% extends "base.html" %}
-
-{% block title %}Pemesanan Saya - Booking Tiket Pesawat{% endblock %}
-
+{% block title %}Pemesanan Saya{% endblock %}
 {% block content %}
-    <h2 class="text-center" style="margin-bottom: 30px; color: #2c3e50;">Riwayat Pemesanan Tiket Saya</h2>
-
+    <h2 class="page-title">Riwayat Pemesanan Saya</h2>
     <div class="card">
         {% if bookings %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>No. Pemesanan</th>
-                        <th>Penerbangan</th>
-                        <th>Rute</th>
-                        <th>Jumlah Penumpang</th>
-                        <th>Total Harga</th>
-                        <th>Status</th>
-                        <th>Tgl. Pemesanan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for booking in bookings %}
-                    <tr>
-                        <td>{{ booking._id }}</td>
-                        <td>{{ booking.flight_details.flight_number }}</td>
-                        <td>{{ booking.flight_details.origin }} ➡️ {{ booking.flight_details.destination }}</td>
-                        <td>{{ booking.num_passengers }}</td>
-                        <td>Rp {{ "{:,.0f}".format(booking.total_price) }}</td>
-                        <td>
-                            {% if booking.status == 'confirmed' %}
-                                <span style="color: #16a085; font-weight: bold;">Dikonfirmasi</span>
-                            {% elif booking.status == 'cancelled' %}
-                                <span style="color: #e74c3c; font-weight: bold;">Dibatalkan</span>
-                            {% else %}
-                                {{ booking.status | capitalize }}
-                            {% endif %}
-                        </td>
-                        <td>{{ booking.booking_date.strftime('%d %b %Y, %H:%M') }}</td>
-                        <td class="actions">
-                            {% if booking.status == 'confirmed' %}
-                                <button type="button" class="delete" onclick="confirmCancel('{{ booking._id }}')">Batalkan</button>
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tgl. Pesan</th>
+                            <th>Penerbangan</th>
+                            <th>Rute</th>
+                            <th>Penumpang</th>
+                            <th>Total Harga</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.booking_date.strftime('%d %b %Y, %H:%M') }}</td>
+                            <td>{{ booking.flight_details.flight_number }}</td>
+                            <td>{{ booking.flight_details.origin }} ➔ {{ booking.flight_details.destination }}</td>
+                            <td>{{ booking.num_passengers }}</td>
+                            <td>Rp{{ "{:,.0f}".format(booking.total_price) }}</td>
+                            <td><span class="status-badge status-{{ booking.status }}">{{ booking.status|capitalize }}</span></td>
+                            <td>
+                                {% if booking.status == 'confirmed' %}
+                                <form action="{{ url_for('cancel_booking', booking_id=booking._id) }}" method="POST" onsubmit="return confirm('Yakin ingin membatalkan pesanan ini?');">
+                                    <button type="submit" class="action-button">Batalkan</button>
+                                </form>
+                                {% else %} - {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
-            <p class="text-center" style="padding: 20px;">Anda belum memiliki riwayat pemesanan tiket.</p>
+            <p style="text-align:center; padding: 40px;">Anda belum memiliki riwayat pemesanan tiket.</p>
         {% endif %}
     </div>
-
-    <script>
-        function confirmCancel(bookingId) {
-            showCustomConfirm('Yakin ingin membatalkan pemesanan ini?', (confirmed) => {
-                if (confirmed) {
-                    fetch(`/cancel_booking/${bookingId}`, { method: 'POST' })
-                        .then(response => {
-                            if (response.ok) {
-                                window.location.reload(); // Reload halaman setelah berhasil
-                            } else {
-                                // Tampilkan pesan error jika pembatalan gagal (misal dari flash message)
-                                console.error('Gagal membatalkan pemesanan.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                }
-            });
-        }
-    </script>
 {% endblock %}

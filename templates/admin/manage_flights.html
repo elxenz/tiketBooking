@@ -1,0 +1,41 @@
+{% extends "admin_base.html" %}
+{% block title %}Kelola Penerbangan{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Kelola Penerbangan</h1>
+    <a href="{{ url_for('add_flight') }}" class="add-new-btn">+ Tambah Penerbangan</a>
+</div>
+<div class="card">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>No. Penerbangan</th>
+                    <th>Rute</th>
+                    <th>Waktu Berangkat</th>
+                    <th>Harga</th>
+                    <th>Kursi (Sisa/Total)</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for flight in flights %}
+                <tr>
+                    <td>{{ flight.flight_number }}</td>
+                    <td>{{ flight.origin }} ➔ {{ flight.destination }}</td>
+                    <td>{{ flight.departure_time.strftime('%d %b %Y, %H:%M') }}</td>
+                    <td>Rp{{ "{:,.0f}".format(flight.price) }}</td>
+                    <td>{{ flight.available_seats }}/{{ flight.total_seats }}</td>
+                    <td class="actions-cell">
+                        <a href="{{ url_for('edit_flight', flight_id=flight._id) }}" class="button-sm button-edit">Edit</a>
+                        <form action="{{ url_for('delete_flight', flight_id=flight._id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus penerbangan ini?');">
+                           <button type="submit" class="button-sm button-delete">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
