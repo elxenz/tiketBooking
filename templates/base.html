@@ -9,28 +9,34 @@
 <body>
     <header>
         <div class="container">
-            <h1><a href="{{ url_for('index') }}">✈️ Tiketku</a></h1>
-            <nav>
-                <ul>
-                    <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Cari Penerbangan</a></li>
-                    {% if current_user.is_authenticated %}
-                        <li><a href="{{ url_for('my_bookings') }}" {% if request.endpoint == 'my_bookings' %}class="active"{% endif %}>Pemesanan Saya</a></li>
-                        {% if current_user.is_admin() %}
-                            <li><a href="{{ url_for('admin_dashboard') }}">🚀 Admin Panel</a></li>
+            <div class="header-content">
+                <div class="site-title">
+                    <h1><a href="{{ url_for('index') }}">✈️ Tiketku</a></h1>
+                </div>
+                <nav>
+                    <ul>
+                        {% if not current_user.is_authenticated or not current_user.is_admin() %}
+                            <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Cari Penerbangan</a></li>
                         {% endif %}
+                        {% if current_user.is_authenticated and not current_user.is_admin() %}
+                            <li><a href="{{ url_for('my_bookings') }}" {% if request.endpoint == 'my_bookings' %}class="active"{% endif %}>Pemesanan Saya</a></li>
+                        {% endif %}
+                        {% if current_user.is_authenticated and current_user.is_admin() %}
+                            <li><a href="{{ url_for('admin_dashboard') }}">Admin Panel</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                <div class="auth-buttons">
+                    {% if current_user.is_authenticated %}
+                        <span class="username">Halo, {{ current_user.username }}!</span>
+                        <form action="{{ url_for('logout') }}" method="post" style="display:inline; margin-left: 10px;">
+                            <button type="submit" class="button">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="button">Login</a>
+                        <a href="{{ url_for('register') }}" class="button button-primary">Register</a>
                     {% endif %}
-                </ul>
-            </nav>
-            <div class="auth-nav">
-                {% if current_user.is_authenticated %}
-                    <span class="username">Halo, {{ current_user.username }}!</span>
-                    <form action="{{ url_for('logout') }}" method="post" style="display:inline;">
-                        <button type="submit" class="button button-outline">Logout</button>
-                    </form>
-                {% else %}
-                    <a href="{{ url_for('login') }}" class="button button-outline">Login</a>
-                    <a href="{{ url_for('register') }}" class="button button-primary">Register</a>
-                {% endif %}
+                </div>
             </div>
         </div>
     </header>
@@ -38,7 +44,7 @@
     <main class="container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <ul class="flash-messages">
+                <ul class="flash-messages" style="list-style: none; padding: 0;">
                     {% for category, message in messages %}
                         <li class="alert alert-{{ category }}">{{ message }}</li>
                     {% endfor %}
@@ -49,7 +55,7 @@
     </main>
 
     <footer>
-        <p>&copy; {{ current_year }} Tiketku. Solusi Perjalanan Anda.</p>
+        <p>&copy; {{ current_year }} Tiketku. All Rights Reserved.</p>
     </footer>
 </body>
 </html>

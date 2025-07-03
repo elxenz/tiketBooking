@@ -9,16 +9,27 @@
 
 <div class="stats-grid">
     <div class="card stat-card">
-        <h3>Total Pengguna</h3>
-        <p>{{ stats.total_users }}</p>
+        <div class="stat-card-icon">👥</div>
+        <div class="stat-card-info">
+            <h3>Total Pengguna</h3>
+            <p>{{ stats.total_users }}</p>
+        </div>
     </div>
+
     <div class="card stat-card">
-        <h3>Total Penerbangan</h3>
-        <p>{{ stats.total_flights }}</p>
+        <div class="stat-card-icon">✈️</div>
+        <div class="stat-card-info">
+            <h3>Total Penerbangan</h3>
+            <p>{{ stats.total_flights }}</p>
+        </div>
     </div>
+
     <div class="card stat-card">
-        <h3>Pemesanan Aktif</h3>
-        <p>{{ stats.total_bookings }}</p>
+        <div class="stat-card-icon">🎟️</div>
+        <div class="stat-card-info">
+            <h3>Pemesanan Aktif</h3>
+            <p>{{ stats.total_bookings }}</p>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,40 +1,36 @@
 {% extends "base.html" %}
-
-{% block title %}Detail Penerbangan - Tiketku{% endblock %}
+{% block title %}Detail Penerbangan{% endblock %}
 
 {% block content %}
-    <h2 class="text-center">Detail Penerbangan: {{ flight.flight_number }}</h2>
-
+    <h2 class="page-title">Detail Penerbangan: {{ flight.flight_number }}</h2>
     <div class="card">
-        <div class="detail-grid">
-            <div class="detail-item"><strong>Nomor Penerbangan:</strong> {{ flight.flight_number }}</div>
-            <div class="detail-item"><strong>Asal:</strong> {{ flight.origin }}</div>
-            <div class="detail-item"><strong>Tujuan:</strong> {{ flight.destination }}</div>
-            <div class="detail-item"><strong>Berangkat:</strong> {{ flight.departure_time.strftime('%d %b %Y, %H:%M') }}</div>
-            <div class="detail-item"><strong>Tiba:</strong> {{ flight.arrival_time.strftime('%d %b %Y, %H:%M') }}</div>
-            <div class="detail-item"><strong>Harga:</strong> Rp {{ "{:,.0f}".format(flight.price) }}</div>
-            <div class="detail-item"><strong>Kursi Tersedia:</strong> {{ flight.available_seats }}</div>
-        </div>
-
-        {% if current_user.is_authenticated %}
+        <h3>Rincian</h3>
+        <hr style="margin: 10px 0 20px;">
+        <p><strong>Asal:</strong> {{ flight.origin }}</p>
+        <p><strong>Tujuan:</strong> {{ flight.destination }}</p>
+        <p><strong>Berangkat:</strong> {{ flight.departure_time.strftime('%d %b %Y, %H:%M') }}</p>
+        <p><strong>Tiba:</strong> {{ flight.arrival_time.strftime('%d %b %Y, %H:%M') }}</p>
+        <p><strong>Harga:</strong> Rp{{ "{:,.0f}".format(flight.price) }}</p>
+        <p><strong>Kursi Tersedia:</strong> {{ flight.available_seats }}</p>
+        
+        {% if current_user.is_authenticated and not current_user.is_admin() %}
             {% if flight.available_seats > 0 %}
-            <div class="booking-section">
-                <h3>Pesan Tiket Ini</h3>
-                <form action="{{ url_for('book_flight', flight_id=flight._id) }}" method="POST">
-                    <label for="num_passengers">Jumlah Penumpang:</label>
-                    <input type="number" id="num_passengers" name="num_passengers" min="1" max="{{ flight.available_seats }}" value="1" required>
-                    <button type="submit">Konfirmasi Pemesanan</button>
-                </form>
-            </div>
+                <div style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                    <h4>Pesan Tiket</h4>
+                    <form action="{{ url_for('book_flight', flight_id=flight._id) }}" method="POST">
+                        <div class="form-group">
+                            <label for="num_passengers">Jumlah Penumpang:</label>
+                            <input type="number" id="num_passengers" name="num_passengers" min="1" max="{{ flight.available_seats }}" value="1" required style="max-width: 150px;">
+                        </div>
+                        <button type="submit" class="button button-primary">Konfirmasi Pemesanan</button>
+                    </form>
+                </div>
             {% else %}
-                <p class="text-center" style="color: #e74c3c; font-weight: bold; margin-top: 20px;">Maaf, penerbangan ini sudah penuh.</p>
+                <p style="color: #dc3545; font-weight: bold; margin-top: 20px;">Maaf, penerbangan ini sudah penuh.</p>
             {% endif %}
-        {% else %}
-            <p class="text-center" style="margin-top: 20px;">
-                Anda harus <a href="{{ url_for('login', next=request.path) }}" class="link">Login</a> untuk memesan tiket.
-            </p>
+        {% elif not current_user.is_authenticated %}
+            <p style="margin-top: 20px;">Anda harus <a href="{{ url_for('login', next=request.path) }}">Login</a> sebagai pengguna untuk memesan tiket.</p>
         {% endif %}
     </div>
-
-    <a href="{{ url_for('index') }}" class="link">← Kembali ke Pencarian</a>
+    <a href="{{ url_for('index') }}">← Kembali ke Pencarian</a>
 {% endblock %}

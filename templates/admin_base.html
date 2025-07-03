@@ -8,20 +8,20 @@
 </head>
 <body>
     <aside class="sidebar">
-        <h2><a href="{{ url_for('admin_dashboard') }}">Admin Panel</a></h2>
+        <div class="sidebar-header">
+            <h2><a href="{{ url_for('admin_dashboard') }}">Admin Panel</a></h2>
+        </div>
         <ul class="sidebar-nav">
             <li><a href="{{ url_for('admin_dashboard') }}" {% if request.endpoint == 'admin_dashboard' %}class="active"{% endif %}>Dashboard</a></li>
             <li><a href="{{ url_for('manage_users') }}" {% if request.endpoint == 'manage_users' %}class="active"{% endif %}>Kelola Pengguna</a></li>
             <li><a href="{{ url_for('manage_flights') }}" {% if 'flight' in request.endpoint %}class="active"{% endif %}>Kelola Penerbangan</a></li>
             <li><a href="{{ url_for('manage_all_bookings') }}" {% if request.endpoint == 'manage_all_bookings' %}class="active"{% endif %}>Kelola Pemesanan</a></li>
         </ul>
-        <div class="user-info">
-            <p>Login sebagai:</p>
-            <strong>{{ current_user.username }}</strong>
-            <form action="{{ url_for('logout') }}" method="post" style="margin-top: 10px;">
-                <button type="submit" class="button-sm button-delete">Logout</button>
+        <div class="sidebar-footer">
+            <p>Login sebagai: <strong>{{ current_user.username }}</strong></p>
+            <form action="{{ url_for('logout') }}" method="post">
+                <button type="submit" class="logout-btn">Logout</button>
             </form>
-            <a href="{{ url_for('index') }}" style="color:#ccc; font-size:0.8rem; margin-top:10px; display:block;">Kembali ke Situs</a>
         </div>
     </aside>
 

@@ -5,55 +5,56 @@
 {% block content %}
     <h2 class="page-title">Temukan Penerbangan Impian Anda</h2>
 
-    <div class="card search-form">
+    <div class="card">
         <form method="GET">
-            <div class="flex-group">
-                <div>
+            <div class="search-form-grid">
+                <div class="form-group">
                     <label for="origin">Dari (Bandara Asal):</label>
                     <select id="origin" name="origin">
                         <option value="">Semua Bandara</option>
                         {% for airport in airports %}<option value="{{ airport }}" {% if origin_filter == airport %}selected{% endif %}>{{ airport }}</option>{% endfor %}
                     </select>
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="destination">Ke (Bandara Tujuan):</label>
                     <select id="destination" name="destination">
                         <option value="">Semua Bandara</option>
                         {% for airport in airports %}<option value="{{ airport }}" {% if destination_filter == airport %}selected{% endif %}>{{ airport }}</option>{% endfor %}
                     </select>
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="departure_date">Tanggal Keberangkatan:</label>
                     <input type="date" id="departure_date" name="departure_date" value="{{ departure_date_filter }}">
                 </div>
-                <button type="submit" class="button">Cari</button>
+                <div class="form-group">
+                     <label>&nbsp;</label>
+                    <button type="submit" class="button button-primary" style="width:100%;">Cari</button>
+                </div>
             </div>
         </form>
     </div>
 
-    <h3 style="margin: 40px 0 20px;">
+    <h3 style="margin: 40px 0 20px; font-weight: 600;">
         {% if search_performed %}Hasil Pencarian{% else %}Penerbangan Tersedia{% endif %}
     </h3>
 
-    {% if flights %}
-        <div class="card">
+    <div class="card">
+        {% if flights %}
             {% for flight in flights %}
             <div class="flight-item">
                 <div class="flight-info">
                     <h3>{{ flight.origin }} ➔ {{ flight.destination }}</h3>
-                    <p><strong>Maskapai:</strong> {{ flight.flight_number }}</p>
-                    <p><strong>Berangkat:</strong> {{ flight.departure_time.strftime('%d %b %Y, %H:%M') }}</p>
+                    <p>Maskapai: {{ flight.flight_number }}</p>
+                    <p>Berangkat: {{ flight.departure_time.strftime('%d %b %Y, %H:%M') }}</p>
                 </div>
                 <div class="flight-actions">
-                    <span class="price">Rp{{ "{:,.0f}".format(flight.price) }}</span>
-                    <a href="{{ url_for('flight_details', flight_id=flight._id) }}" class="button button-small">Lihat Detail</a>
+                    <div class="price">Rp{{ "{:,.0f}".format(flight.price) }}</div>
+                    <a href="{{ url_for('flight_details', flight_id=flight._id) }}" class="button">Lihat Detail</a>
                 </div>
             </div>
             {% endfor %}
-        </div>
-    {% else %}
-        <div class="card" style="text-align:center; padding: 50px;">
-            <p>Tidak ada penerbangan yang ditemukan. Coba ubah kriteria pencarian Anda.</p>
-        </div>
-    {% endif %}
+        {% else %}
+            <p style="text-align:center; padding: 40px;">Tidak ada penerbangan yang ditemukan.</p>
+        {% endif %}
+    </div>
 {% endblock %}

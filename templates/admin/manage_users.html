@@ -4,6 +4,7 @@
 {% block content %}
 <div class="page-header">
     <h1>Kelola Pengguna</h1>
+    <p>Lihat dan kelola semua akun pengguna yang terdaftar di platform Anda.</p>
 </div>
 
 <div class="card">
@@ -21,17 +22,17 @@
             <tbody>
                 {% for user in users %}
                 <tr>
-                    <td>{{ user.username }}</td>
+                    <td><strong>{{ user.username }}</strong></td>
                     <td>{{ user.email }}</td>
                     <td><span class="role-badge role-{{ user.role }}">{{ user.role|capitalize }}</span></td>
                     <td>{{ user.created_at.strftime('%d %b %Y') }}</td>
                     <td class="actions-cell">
                         {% if user._id|string != current_user.id %}
-                        <form action="{{ url_for('delete_user', user_id=user._id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengguna ini?');">
+                        <form action="{{ url_for('delete_user', user_id=user._id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengguna ini? Tindakan ini tidak bisa dibatalkan.');">
                             <button type="submit" class="button-sm button-delete">Hapus</button>
                         </form>
                         {% else %}
-                        (Anda)
+                        <span>(Anda)</span>
                         {% endif %}
                     </td>
                 </tr>

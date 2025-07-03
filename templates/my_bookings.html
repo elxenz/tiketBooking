@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Pemesanan Saya{% endblock %}
+
 {% block content %}
     <h2 class="page-title">Riwayat Pemesanan Saya</h2>
     <div class="card">
@@ -29,7 +30,7 @@
                             <td>
                                 {% if booking.status == 'confirmed' %}
                                 <form action="{{ url_for('cancel_booking', booking_id=booking._id) }}" method="POST" onsubmit="return confirm('Yakin ingin membatalkan pesanan ini?');">
-                                    <button type="submit" class="action-button">Batalkan</button>
+                                    <button type="submit" class="button-sm button-delete">Batalkan</button>
                                 </form>
                                 {% else %} - {% endif %}
                             </td>
